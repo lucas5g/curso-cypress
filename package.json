@@ -3,11 +3,14 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "test:open": "cypress open"
+        "test:open": "cypress open",
+        "test:run": "cypress run",
+        "test:spec": "yarn test:run --spec cypress/integration/"
     },
     "license": "MIT",
     "dependencies": {
         "-": "^0.0.1",
+        "@types/lodash": "^4.14.169",
         "cypress": "^7.3.0"
     }
 }

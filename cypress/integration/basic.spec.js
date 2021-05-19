@@ -5,7 +5,14 @@ describe('Cyprees basics', () => {
         cy.visit('https://wcaquino.me/cypress/componentes.html')
         cy.title()
             .should('equal', 'Campo de Treinamento')
-            .should('contain', 'Campo').debug()
+            .should('contain', 'Campo')
+
+        cy.title()
+            .should(title => {
+                console.log('teste')
+                console.log(title)
+            })
+
     })
 
     it('Should find and interact with an element', () => {

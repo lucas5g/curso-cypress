@@ -13,6 +13,18 @@ describe('Cyprees basics', () => {
                 console.log(title)
             })
 
+
+        let syncTitle
+        cy.title().then(title => {
+            syncTitle = title
+            cy.get('#formNome').type(title)
+        })
+
+        cy.get('#elementosForm\\:sugestoes')
+            .then(el => {
+                cy.wrap(el).type(syncTitle)
+            })
+
     })
 
     it('Should find and interact with an element', () => {

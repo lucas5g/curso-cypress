@@ -18,7 +18,7 @@ describe('Work with basics elements', () => {
         cy.get('#resultado').should('have.text', 'Voltou!')
         cy.reload()
     })
-    it.only('TextFields', () => {
+    it('TextFields', () => {
         cy.get('#formNome').type('Cypress Test')
         cy.get('#formNome').should('have.value', 'Cypress Test')
 
@@ -70,14 +70,40 @@ describe('Work with basics elements', () => {
         //     .should('be.checked')
     })
 
-    it.only('Combo', () => {
+    it('Combo', () => {
         cy.get('[data-test=dataEscolaridade]')
             .select('2o grau completo')
             .should('have.value', '2graucomp')
+
+        cy.get('[data-test=dataEscolaridade] option ')
+            .should('have.length', 8)
+            .then(option => {
+                const values = []
+
+                option.map(function() {
+                    values.push(this.innerHTML)
+                })
+
+                cy.log(values)
+                expect(values).to.include.members(['Superior', 'Mestrado'])
+            })
+
     })
 
     it.only('Combo multiplo', () => {
         cy.get('[data-testid=dataEsportes]')
             .select(['natacao', 'Corrida', 'nada'])
+
+        cy.get('[data-testid=dataEsportes]')
+            .then(el => {
+                expect(el.val()).to.be.deep.equal(['natacao', 'Corrida', 'nada'])
+                expect(el.val()).to.have.length(3)
+            })
+
+        cy.get('[data-testid=dataEsportes')
+            .invoke('val')
+            .should('eql', ['natacao', 'Corrida', 'nada'])
     })
+
+
 })

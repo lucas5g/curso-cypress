@@ -1,5 +1,5 @@
 Cypress.Commands.add('clickAlert', (locator, message) => {
-    cy.get('#alert').click()
+    cy.get(locator).click()
 
     cy.on('window:alert', msg => {
         expect(msg).to.be.equal(message)

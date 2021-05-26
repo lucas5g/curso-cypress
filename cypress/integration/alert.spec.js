@@ -7,14 +7,15 @@ describe('Work with alerts', () => {
         cy.reload()
     })
 
-    it('Alert', () => {
-        cy.get('#alert')
-            .click()
+    it.only('Alert', () => {
+        // cy.get('#alert')
+        //     .click()
 
-        cy.on('window:alert', msg => {
-            console.log(msg)
-            expect(msg).eq('Alert Simples')
-        })
+        // cy.on('window:alert', msg => {
+        //     console.log(msg)
+        //     expect(msg).eq('Alert Simples')
+        // })
+        cy.clickAlert('#alert', 'Alert Simples')
 
     })
 
@@ -81,7 +82,7 @@ describe('Work with alerts', () => {
 
     })
 
-    it.only('Validando mensagens', () => {
+    it('Validando mensagens', () => {
         const stub = cy.stub().as('alert')
         cy.on('window:alert', stub)
         cy.get('#formCadastrar')

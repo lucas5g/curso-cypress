@@ -6,14 +6,33 @@ const locators = {
 
     },
     menu: {
+        home: '[data-test=menu-home]',
         settings: '[data-test=menu-settings]',
         contas: '[href="/contas"]',
-        reset: '[href="/reset"]'
+        reset: '[href="/reset"]',
+        movimentacao: '[data-test=menu-movimentacao]',
+        extrato: '[data-test=menu-extrato]'
     },
     contas: {
         nome: '[data-test=nome]',
         btn: '.btn',
-        btnUpdate: '//table//td[contains(., "Conta de teste")]/..//i[@class="far fa-edit"]'
+        btnUpdate: nome => `//table//td[contains(., '${nome}')]/..//i[@class='far fa-edit']`
+    },
+    movimentacao: {
+        descricao: '[data-test=descricao]',
+        valor: '[data-test=valor]',
+        interessado: '[data-test=envolvido]',
+        conta: '[data-test=conta]',
+        btnSalvar: '.btn-primary',
+        status: '[data-test=status]'
+    },
+    extrato: {
+        linhas: '.list-group > li',
+        xpBusca: (desc, value) => `//span[contains(.,'${desc}')]/following-sibling::small[contains(.,'${value}')]`,
+        xpDelete: conta => `//li[contains(., '${conta}')]//i[contains(@class, 'far fa-trash-alt')]`
+    },
+    saldo: {
+        xpSaldoConta: nome => `//tr[contains(.,'${nome}')]/td[2]`
     },
     message: '.toast-message'
 }

@@ -29,7 +29,9 @@ const locators = {
     extrato: {
         linhas: '.list-group > li',
         xpBusca: (desc, value) => `//span[contains(.,'${desc}')]/following-sibling::small[contains(.,'${value}')]`,
-        xpDelete: conta => `//li[contains(., '${conta}')]//i[contains(@class, 'far fa-trash-alt')]`
+        xpDelete: conta => `//li[contains(., '${conta}')]//i[contains(@class, 'far fa-trash-alt')]`,
+        edit: conta => `//li[contains(., '${conta}')]//i[contains(@class, 'fas fa-edit')]`,
+        //li[contains(.,'Movimentacao 1, calculo saldo')]//i[contains(@class, 'fas fa-edit')]
     },
     saldo: {
         xpSaldoConta: nome => `//tr[contains(.,'${nome}')]/td[2]`

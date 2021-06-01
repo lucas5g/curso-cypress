@@ -14,19 +14,34 @@ describe('Should test at a functional a level', () => {
         // })
     it.only('Should create an account ', () => {
         cy.request({
-            method: 'post',
-            url: 'https://barrigarest.wcaquino.me/signin',
-            body: {
-                email: 'lucas@mail.com',
-                senha: 'qweqwe'
-            }
-        }).then(response => {
-            console.log(response)
-        }).its('body.token').should('not.be.empty')
+                method: 'post',
+                url: 'https://barrigarest.wcaquino.me/signin',
+                body: {
+                    email: 'lucas@mail.com',
+                    senha: 'qweqwe'
+                }
+            }).then(response => {
+                console.log(response)
+            }).its('body.token').should('not.be.empty')
+            .then(token => {
+                cy.request({
+                        method: 'post',
+                        url: 'https://barrigarest.wcaquino.me/contas',
+                        headers: { Authorization: `JWT ${token}` },
+                        body: {
+                            nome: 'Conta via rest23'
+                        }
+                    }).then(res => console.log(res))
+                    .as('response')
+            })
+        cy.get('@response').then(res => {
+            expect(res.status).to.be.equal(201)
+            expect(res.body).to.have.property('id')
+            expect(res.body).to.have.property('nome')
+        })
     })
 
     it('Should update an account', () => {
-
 
     })
 

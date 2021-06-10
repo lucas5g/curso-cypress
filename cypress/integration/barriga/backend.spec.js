@@ -5,35 +5,29 @@
 
 describe('Should test at a functional a level', () => {
 
+    let token
     before(() => {
 
+        cy.getToken('lucas@mail.com', 'qweqwe')
+            .then(res => {
+                token = res
+            })
             // cy.resetApp()
-        })
-        // beforeEach(() => {
-        //     cy.get(loc.menu.home).click()
-        // })
-    it.only('Should create an account ', () => {
+    })
+    beforeEach(() => {
+        cy.resetRest()
+    })
+    it('Should create an account ', () => {
+
         cy.request({
                 method: 'post',
-                url: 'https://barrigarest.wcaquino.me/signin',
+                url: '/contas',
+                headers: { Authorization: `JWT ${token}` },
                 body: {
-                    email: 'lucas@mail.com',
-                    senha: 'qweqwe'
+                    nome: 'Conta via rest23'
                 }
-            }).then(response => {
-                console.log(response)
-            }).its('body.token').should('not.be.empty')
-            .then(token => {
-                cy.request({
-                        method: 'post',
-                        url: 'https://barrigarest.wcaquino.me/contas',
-                        headers: { Authorization: `JWT ${token}` },
-                        body: {
-                            nome: 'Conta via rest23'
-                        }
-                    }).then(res => console.log(res))
-                    .as('response')
-            })
+            }).then(res => console.log(res))
+            .as('response')
         cy.get('@response').then(res => {
             expect(res.status).to.be.equal(201)
             expect(res.body).to.have.property('id')
@@ -42,18 +36,90 @@ describe('Should test at a functional a level', () => {
     })
 
     it('Should update an account', () => {
+        cy.request({
+            method: 'get',
+            url: '/contas',
+            headers: { Authorization: `JWT ${token}` },
+            qs: {
+                nome: 'Conta para alterar'
+            }
+        }).then(res => {
 
+            cy.request({
+                url: `/contas/${res.body[0].id}`,
+                method: 'put',
+                headers: { Authorization: `JWT ${token}` },
+                body: {
+                    nome: 'conta alterada via rest'
+                }
+            }).as('response')
+        })
+
+        cy.get('@response')
+            .its('status').should('equal', 200)
     })
 
     it('Should not create an account with same name', () => {
+        cy.request({
+            method: 'get',
+            url: '/contas',
+            headers: { Authorization: `JWT ${token}` },
+            qs: {
+                nome: 'Conta para alterar'
+            }
+        }).then(res => {
 
+            cy.request({
+                url: '/contas',
+                method: 'post',
+                headers: { Authorization: `JWT ${token}` },
+                body: {
+                    nome: 'Conta mesmo nome'
+                },
+                failOnStatusCode: false
+            }).as('response')
+        })
+
+        cy.get('@response')
+            .then(res => {
+                // console.log(res)
+                expect(res.status).equal(400)
+                expect(res.body.error).equal("Já existe uma conta com esse nome!")
+            })
     })
 
-    it('Should create a transaction', () => {
+    it.only('Should create a transaction', () => {
+        cy.getContaByName('Conta para movimentacoes')
+            .then(id => {
+                cy.request({
+                        method: 'post',
+                        url: '/transacoes',
+                        headers: { Authorization: `JWT ${token}` },
+                        body: {
+                            conta_id: id,
+                            data_pagamento: Cypress.dayjs().add(1, 'day').format('DD/MM/YYYY'),
+                            data_transacao: Cypress.dayjs().format('DD/MM/YYYY'),
+                            descricao: 'desc',
+                            envolvido: 'inter',
+                            status: true,
+                            tipo: 'REC',
+                            valor: '789'
+                        },
+                        failOnStatusCode: false
 
+                    }).as('response')
+                    .then(res => {
+                        console.log(res)
+                    })
+            })
+        cy.get('@response')
+            .its('status').should('equal', 201)
+
+        cy.get('@response')
+            .its('body.id').should('exist')
     })
 
-    it.only('Shoul get balance', () => {
+    it('Shoul get balance', () => {
 
 
 

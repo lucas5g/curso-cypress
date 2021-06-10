@@ -17,9 +17,14 @@
 import './commands'
 require('cypress-xpath')
 
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
 Cypress.SelectorPlayground.defaults({
     selectorPriority: ['data-wc', 'data-cy', 'data-testid', 'data-test', 'id', 'class', 'attributes', 'tag', 'nth-child']
 })
+
+const dayjs = require('dayjs')
+
+Cypress.dayjs = dayjs

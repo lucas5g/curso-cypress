@@ -9,9 +9,10 @@ describe('Should test at a functional a level', () => {
     before(() => {
 
         cy.getToken('lucas@mail.com', 'qweqwe')
-            .then(res => {
-                token = res
-            })
+            // .then(res => {
+            //     console.log({ res })
+            //     token = res
+            // })
             // cy.resetApp()
     })
     beforeEach(() => {
@@ -22,7 +23,7 @@ describe('Should test at a functional a level', () => {
         cy.request({
                 method: 'post',
                 url: '/contas',
-                headers: { Authorization: `JWT ${token}` },
+                // headers: { Authorization: `JWT ${token}` },
                 body: {
                     nome: 'Conta via rest23'
                 }
@@ -39,7 +40,7 @@ describe('Should test at a functional a level', () => {
         cy.request({
             method: 'get',
             url: '/contas',
-            headers: { Authorization: `JWT ${token}` },
+            // headers: { Authorization: `JWT ${token}` },
             qs: {
                 nome: 'Conta para alterar'
             }
@@ -48,7 +49,7 @@ describe('Should test at a functional a level', () => {
             cy.request({
                 url: `/contas/${res.body[0].id}`,
                 method: 'put',
-                headers: { Authorization: `JWT ${token}` },
+                // headers: { Authorization: `JWT ${token}` },
                 body: {
                     nome: 'conta alterada via rest'
                 }
@@ -63,7 +64,7 @@ describe('Should test at a functional a level', () => {
         cy.request({
             method: 'get',
             url: '/contas',
-            headers: { Authorization: `JWT ${token}` },
+            // headers: { Authorization: `JWT ${token}` },
             qs: {
                 nome: 'Conta para alterar'
             }
@@ -72,7 +73,7 @@ describe('Should test at a functional a level', () => {
             cy.request({
                 url: '/contas',
                 method: 'post',
-                headers: { Authorization: `JWT ${token}` },
+                // headers: { Authorization: `JWT ${token}` },
                 body: {
                     nome: 'Conta mesmo nome'
                 },
@@ -94,7 +95,7 @@ describe('Should test at a functional a level', () => {
                 cy.request({
                         method: 'post',
                         url: '/transacoes',
-                        headers: { Authorization: `JWT ${token}` },
+                        // headers: { Authorization: `JWT ${token}` },
                         body: {
                             conta_id: id,
                             data_pagamento: Cypress.dayjs().add(1, 'day').format('DD/MM/YYYY'),
@@ -124,7 +125,7 @@ describe('Should test at a functional a level', () => {
         cy.request({
             method: 'get',
             url: '/transacoes/',
-            headers: { Authorization: `JWT ${token}` },
+            // headers: { Authorization: `JWT ${token}` },
             qs: { descricao: 'Movimentacao 1, calculo saldo' }
         }).then(res => {
             cy.request({
@@ -157,18 +158,19 @@ describe('Should test at a functional a level', () => {
 
     })
 
-    it.only('Should remove a transaction', () => {
+    it('Should remove a transaction', () => {
         cy.request({
             method: 'get',
             url: '/transacoes/',
-            headers: { Authorization: `JWT ${token}` },
             qs: { descricao: 'Movimentacao para exclusao' }
         }).then(res => {
             cy.request({
                 method: 'delete',
                 url: `/transacoes/${res.body[0].id}`,
-                headers: { Authorization: `JWT ${token}` },
+                // headers: { Authorization: `JWT ${token}` },
             }).its('status').should('equal', 204)
         })
     })
+
+
 })

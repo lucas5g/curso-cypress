@@ -8,10 +8,10 @@ Cypress.Commands.add('clickAlert', (locator, message) => {
     })
 })
 
-Cypress.Commands.add('login', (user, passwd) => {
+Cypress.Commands.add('login', (user, password) => {
     cy.visit('https://barrigareact.wcaquino.me')
-    cy.get(loc.login.user).type('lucas@mail.com')
-    cy.get(loc.login.password).type('qweqwe')
+    cy.get(loc.login.user).type(user)
+    cy.get(loc.login.password).type(password)
     cy.get(loc.login.btn).click()
     cy.get(loc.message).should('contain', 'Bem vindo')
 })

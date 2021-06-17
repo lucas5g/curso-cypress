@@ -91,7 +91,7 @@ export const buildEnv = () => {
             {
                 conta: 'Conta para movimentacoes',
                 id: 31434,
-                descricao: 'Movimentacao para exclusao',
+                descricao: 'Movimentacao para exclusao teste',
                 envolvido: 'aaaa',
                 observacao: null,
                 tipo: 'desp',

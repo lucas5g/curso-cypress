@@ -32,6 +32,8 @@ const locators = {
         xpDelete: conta => `//li[contains(., '${conta}')]//i[contains(@class, 'far fa-trash-alt')]`,
         edit: conta => `//li[contains(., '${conta}')]//i[contains(@class, 'fas fa-edit')]`,
         //li[contains(.,'Movimentacao 1, calculo saldo')]//i[contains(@class, 'fas fa-edit')]
+        xpLinha: desc => `//span[contains(., '${desc}')]/../../../..`
+
     },
     saldo: {
         xpSaldoConta: nome => `//tr[contains(.,'${nome}')]/td[2]`

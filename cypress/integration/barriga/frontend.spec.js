@@ -16,6 +16,26 @@ describe('Should test at a functional a level', () => {
 
         cy.get(loc.menu.home).click()
     })
+    it('Should test the resposivennes', () => {
+
+        cy.get('[data-test=menu-home]').should('exist')
+            .and('be.visible')
+
+        cy.viewport(500, 700)
+        cy.get('[data-test=menu-home]').should('exist')
+            .and('be.not.visible')
+
+        cy.viewport('iphone-5')
+        cy.get('[data-test=menu-home]')
+            .should('exist')
+            .and('be.not.visible')
+
+        cy.viewport('ipad-2')
+        cy.get('[data-test=menu-home]')
+            .should('exist')
+            .and('be.visible')
+
+    })
     it('Should create an account ', () => {
 
         cy.route({
@@ -96,7 +116,7 @@ describe('Should test at a functional a level', () => {
         cy.xpath(loc.extrato.xpBusca('desc', '123')).should('exist')
     })
 
-    it.only('Shoul get balance', () => {
+    it('Shoul get balance', () => {
 
         cy.route({
             method: 'get',
@@ -176,8 +196,134 @@ describe('Should test at a functional a level', () => {
     })
 
     it('Should remove a transaction', () => {
+        cy.route({
+            method: 'delete',
+            url: '/transacoes/**',
+            response: {},
+            status: 204,
+
+        }).as('delete')
         cy.get(loc.menu.extrato).click()
-        cy.xpath(loc.extrato.xpDelete('Movimentacao para exclusao')).click()
+        cy.xpath(loc.extrato.xpDelete('Movimentacao para exclusao teste')).click()
         cy.get(loc.message).should('contain', 'sucesso')
     })
+
+
+    it('Should validate data sendo to create an account ', () => {
+
+        const reqStub = cy.stub()
+        cy.route({
+            method: 'post',
+            url: '/contas',
+            response: { id: 3, nome: 'Conta de teste', visivel: true, usuario_id: 1 },
+            // onRequest: req => {
+            //     console.log(req)
+            //     expect(req.request.body.nome).to.be.empty
+            //     expect(req.request.headers).to.have.property('Authorization')
+
+            onRequest: reqStub
+        }).as('saveConta')
+        cy.route({
+            method: 'get',
+            url: '/contas',
+            response: [
+                { id: 1, nome: 'Carteira', visivel: true, usuario_id: 1 },
+                { id: 2, nome: 'Banco', visivel: true, usuario_id: 1 },
+                { id: 3, nome: 'Conta de teste', visivel: true, usuario_id: 1 }
+            ]
+        }).as('contas')
+        cy.acessarMenuConta()
+        cy.inserirConta('{control}')
+        cy.wait('@saveConta')
+            .then(() => {
+                console.log(reqStub.args[0][0])
+                expect(reqStub.args[0][0].request.body.nome).to.be.empty
+                expect(reqStub.args[0][0].request.headers).to.have.property('Authorization')
+
+            })
+            // .its('request.body.nome').should('not.be.empty')
+        cy.get(loc.message).should('contain', 'inserida com sucesso')
+    })
+
+    it('Should test colos', () => {
+        cy.route({
+            method: 'get',
+            url: '/extrato/**',
+            response: [{
+                    conta: 'Conta para movimentacoes',
+                    id: 31434,
+                    descricao: 'Receita paga',
+                    envolvido: 'aaaa',
+                    observacao: null,
+                    tipo: 'REC',
+                    data_transacao: '2019-11-13',
+                    data_pagamento: '2019-11-13',
+                    valor: '-1500.00',
+                    status: true,
+                    conta_id: 42007,
+                    usuario_id: 1,
+                    transferencia_id: null,
+                    parcelamento_id: null
+                },
+                {
+                    conta: 'Conta para movimentacoes',
+                    id: 31434,
+                    descricao: 'Receita pendente',
+                    envolvido: 'aaaa',
+                    observacao: null,
+                    tipo: 'desp',
+                    data_transacao: '2019-11-13',
+                    data_pagamento: '2019-11-13',
+                    valor: '-1500.00',
+                    status: false,
+                    conta_id: 42007,
+                    usuario_id: 1,
+                    transferencia_id: null,
+                    parcelamento_id: null
+                },
+                {
+                    conta: 'Conta para movimentacoes',
+                    id: 31434,
+                    descricao: 'Despesa paga',
+                    envolvido: 'aaaa',
+                    observacao: null,
+                    tipo: 'REC',
+                    data_transacao: '2019-11-13',
+                    data_pagamento: '2019-11-13',
+                    valor: '-1500.00',
+                    status: true,
+                    conta_id: 42007,
+                    usuario_id: 1,
+                    transferencia_id: null,
+                    parcelamento_id: null
+                },
+                {
+                    conta: 'Conta para movimentacoes',
+                    id: 31434,
+                    descricao: 'Despesa pendente',
+                    envolvido: 'aaaa',
+                    observacao: null,
+                    tipo: 'desp',
+                    data_transacao: '2019-11-13',
+                    data_pagamento: '2019-11-13',
+                    valor: '-1500.00',
+                    status: false,
+                    conta_id: 42007,
+                    usuario_id: 1,
+                    transferencia_id: null,
+                    parcelamento_id: null
+                },
+
+            ]
+        })
+
+        cy.get(loc.menu.extrato).click()
+        cy.xpath(loc.extrato.xpLinha('Receita paga'))
+            .should('have.class', 'receitaPaga')
+
+        cy.xpath(loc.extrato.xpLinha('Receita pendente'))
+            .should('have.class', 'despesaPendente')
+    })
+
+
 })
